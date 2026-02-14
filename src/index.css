@@ -12,6 +12,7 @@
   --card-bg: rgba(22, 27, 34, 0.9);
   --glass-bg: rgba(13, 17, 23, 0.7);
   --glass-border: rgba(240, 246, 252, 0.15);
+  --code-bg: #161b22;
 }
 
 [data-theme='light'] {
@@ -28,6 +29,7 @@
   --card-bg: rgba(255, 255, 255, 0.9);
   --glass-bg: rgba(255, 255, 255, 0.8);
   --glass-border: rgba(27, 31, 36, 0.15);
+  --code-bg: #f3f4f6;
 }
 
 :root {
@@ -227,11 +229,12 @@ main {
 }
 
 .markdown-viewer code {
-  background-color: var(--hover-bg);
+  background-color: var(--code-bg);
   padding: 0.2rem 0.4rem;
   border-radius: 4px;
   font-family: 'Fira Code', monospace;
   font-size: 0.9em;
+  color: var(--accent-color);
 }
 
 .markdown-viewer pre {
@@ -239,6 +242,7 @@ main {
   border-radius: 12px;
   overflow: hidden;
   border: 1px solid var(--border-color);
+  background-color: var(--code-bg) !important;
 }
 
 /* Animations */

@@ -41,7 +41,7 @@ function App() {
       <main>
         {selectedCheatsheet ? (
           <div className="content-container">
-            <MarkdownViewer content={selectedCheatsheet.content} />
+            <MarkdownViewer content={selectedCheatsheet.content} theme={theme} />
           </div>
         ) : (
           <div className="no-results">
