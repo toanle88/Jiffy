@@ -1,4 +1,4 @@
-import { Search, Layout, Tag, Star } from 'lucide-react';
+import { Search, Layout, Tag, Star, X } from 'lucide-react';
 import type { Cheatsheet } from '../utils/cheatsheetLoader';
 import ThemeToggle from './ThemeToggle';
 
@@ -14,6 +14,8 @@ interface SidebarProps {
   toggleFavorite: (id: string) => void;
   showFavorites: boolean;
   setShowFavorites: (show: boolean) => void;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 const Sidebar = ({
@@ -27,25 +29,46 @@ const Sidebar = ({
   favorites,
   toggleFavorite,
   showFavorites,
-  setShowFavorites
+  setShowFavorites,
+  isOpen,
+  onClose
 }: SidebarProps) => {
 
   const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
       onSelect(id);
+      if (window.innerWidth < 768) {
+        onClose();
+      }
     }
   };
 
+  const handleSelect = (id: string) => {
+    onSelect(id);
+    if (window.innerWidth < 768) {
+      onClose();
+    }
+  }
+
   return (
-    <aside className="sidebar" aria-label="Cheatsheet navigation">
+    <aside className={`sidebar ${isOpen ? 'open' : ''}`} aria-label="Cheatsheet navigation">
       <div className="sidebar-header">
         <div className="logo-container">
           <div className="logo">
             <Layout className="icon" />
             <span>Jiffy Cheats</span>
           </div>
-          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+          <div className="header-actions">
+            <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
+            <button
+              className="close-sidebar-btn"
+              onClick={onClose}
+              aria-label="Close sidebar"
+            >
+              <X size={20} />
+            </button>
+          </div>
         </div>
         <div className="search-container">
           <Search className="search-icon" size={18} aria-hidden="true" />
@@ -74,7 +97,7 @@ const Sidebar = ({
               role="option"
               aria-selected={selectedId === sheet.id}
               className={selectedId === sheet.id ? 'active' : ''}
-              onClick={() => onSelect(sheet.id)}
+              onClick={() => handleSelect(sheet.id)}
               onKeyDown={(e) => handleKeyDown(e, sheet.id)}
               tabIndex={0}
             >

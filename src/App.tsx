@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react'
+import { Menu } from 'lucide-react'
 import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
 import { useCheatsheets } from './hooks/useCheatsheets'
@@ -12,6 +13,7 @@ function App() {
   const { favorites, toggleFavorite } = useFavorites()
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [showFavorites, setShowFavorites] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
 
   const filteredCheatsheets = useMemo(() => {
     if (showFavorites) {
@@ -40,6 +42,22 @@ function App() {
 
   return (
     <>
+      <button
+        className="mobile-menu-btn"
+        onClick={() => setIsSidebarOpen(true)}
+        aria-label="Open menu"
+      >
+        <Menu size={24} />
+      </button>
+
+      {isSidebarOpen && (
+        <div
+          className="sidebar-overlay"
+          onClick={() => setIsSidebarOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
       <Sidebar
         cheatsheets={filteredCheatsheets}
         onSelect={setSelectedId}
@@ -52,6 +70,8 @@ function App() {
         toggleFavorite={toggleFavorite}
         showFavorites={showFavorites}
         setShowFavorites={setShowFavorites}
+        isOpen={isSidebarOpen}
+        onClose={() => setIsSidebarOpen(false)}
       />
       <main>
         {selectedCheatsheet ? (
