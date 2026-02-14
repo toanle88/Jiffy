@@ -3,12 +3,22 @@ import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
 import { useCheatsheets } from './hooks/useCheatsheets'
 import { useTheme } from './hooks/useTheme'
+import { useFavorites } from './hooks/useFavorites'
 import './index.css'
 
 function App() {
-  const { filteredCheatsheets, searchQuery, setSearchQuery, loading } = useCheatsheets()
+  const { filteredCheatsheets: searchResults, searchQuery, setSearchQuery, loading } = useCheatsheets()
   const { theme, toggleTheme } = useTheme()
+  const { favorites, toggleFavorite } = useFavorites()
   const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [showFavorites, setShowFavorites] = useState(false)
+
+  const filteredCheatsheets = useMemo(() => {
+    if (showFavorites) {
+      return searchResults.filter(sheet => favorites.has(sheet.id))
+    }
+    return searchResults
+  }, [searchResults, showFavorites, favorites])
 
   const effectiveSelectedId = useMemo(() => {
     if (selectedId && filteredCheatsheets.some(s => s.id === selectedId)) {
@@ -38,6 +48,10 @@ function App() {
         onSearchChange={setSearchQuery}
         theme={theme}
         toggleTheme={toggleTheme}
+        favorites={favorites}
+        toggleFavorite={toggleFavorite}
+        showFavorites={showFavorites}
+        setShowFavorites={setShowFavorites}
       />
       <main>
         {selectedCheatsheet ? (

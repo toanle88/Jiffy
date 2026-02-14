@@ -1,4 +1,4 @@
-import { Search, Layout, Tag } from 'lucide-react';
+import { Search, Layout, Tag, Star } from 'lucide-react';
 import type { Cheatsheet } from '../utils/cheatsheetLoader';
 import ThemeToggle from './ThemeToggle';
 
@@ -10,6 +10,10 @@ interface SidebarProps {
   onSearchChange: (query: string) => void;
   theme: 'dark' | 'light';
   toggleTheme: () => void;
+  favorites: Set<string>;
+  toggleFavorite: (id: string) => void;
+  showFavorites: boolean;
+  setShowFavorites: (show: boolean) => void;
 }
 
 const Sidebar = ({
@@ -19,7 +23,11 @@ const Sidebar = ({
   searchQuery,
   onSearchChange,
   theme,
-  toggleTheme
+  toggleTheme,
+  favorites,
+  toggleFavorite,
+  showFavorites,
+  setShowFavorites
 }: SidebarProps) => {
 
   const handleKeyDown = (e: React.KeyboardEvent, id: string) => {
@@ -48,6 +56,14 @@ const Sidebar = ({
             onChange={(e) => onSearchChange(e.target.value)}
             aria-label="Search cheatsheets"
           />
+          <button
+            className={`favorite-filter-btn ${showFavorites ? 'active' : ''}`}
+            onClick={() => setShowFavorites(!showFavorites)}
+            title={showFavorites ? "Show all" : "Show favorites only"}
+            aria-label={showFavorites ? "Show all cheatsheets" : "Show favorites only"}
+          >
+            <Star size={18} fill={showFavorites ? "currentColor" : "none"} />
+          </button>
         </div>
       </div>
       <nav className="sidebar-nav" aria-label="Cheatsheet list">
@@ -62,7 +78,20 @@ const Sidebar = ({
               onKeyDown={(e) => handleKeyDown(e, sheet.id)}
               tabIndex={0}
             >
-              <span className="title">{sheet.title}</span>
+              <div className="title-row">
+                <span className="title">{sheet.title}</span>
+                <button
+                  className={`favorite-btn ${favorites.has(sheet.id) ? 'active' : ''}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    toggleFavorite(sheet.id);
+                  }}
+                  title={favorites.has(sheet.id) ? "Remove from favorites" : "Add to favorites"}
+                  aria-label={favorites.has(sheet.id) ? "Remove from favorites" : "Add to favorites"}
+                >
+                  <Star size={14} fill={favorites.has(sheet.id) ? "currentColor" : "none"} />
+                </button>
+              </div>
               <div className="tags">
                 {sheet.tags.map(tag => (
                   <span key={tag} className="tag">
