@@ -147,9 +147,13 @@ main {
   flex: 1;
   overflow-y: auto;
   padding: 2rem;
+  width: 100%;
+}
+
+.content-container,
+.no-results {
   max-width: 900px;
   margin: 0 auto;
-  width: 100%;
 }
 
 .content-container {
@@ -171,6 +175,7 @@ main {
   margin-bottom: 2rem;
   background: linear-gradient(to right, #fff, var(--accent-color));
   -webkit-background-clip: text;
+  background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
@@ -190,7 +195,8 @@ main {
   margin-bottom: 1rem;
 }
 
-.markdown-viewer ul, .markdown-viewer ol {
+.markdown-viewer ul,
+.markdown-viewer ol {
   margin-bottom: 1.5rem;
   padding-left: 1.5rem;
 }
@@ -212,8 +218,15 @@ main {
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .content-container {
