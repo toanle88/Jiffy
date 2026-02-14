@@ -1,5 +1,6 @@
 import { Search, Layout, Tag } from 'lucide-react';
 import type { Cheatsheet } from '../utils/cheatsheetLoader';
+import ThemeToggle from './ThemeToggle';
 
 interface SidebarProps {
   cheatsheets: Cheatsheet[];
@@ -7,6 +8,8 @@ interface SidebarProps {
   selectedId: string | null;
   searchQuery: string;
   onSearchChange: (query: string) => void;
+  theme: 'dark' | 'light';
+  toggleTheme: () => void;
 }
 
 const Sidebar = ({ 
@@ -14,14 +17,19 @@ const Sidebar = ({
   onSelect, 
   selectedId, 
   searchQuery, 
-  onSearchChange 
+  onSearchChange,
+  theme,
+  toggleTheme
 }: SidebarProps) => {
   return (
     <aside className="sidebar">
       <div className="sidebar-header">
-        <div className="logo">
-          <Layout className="icon" />
-          <span>Jiffy Cheats</span>
+        <div className="logo-container">
+          <div className="logo">
+            <Layout className="icon" />
+            <span>Jiffy Cheats</span>
+          </div>
+          <ThemeToggle theme={theme} toggleTheme={toggleTheme} />
         </div>
         <div className="search-container">
           <Search className="search-icon" size={18} />

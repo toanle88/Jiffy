@@ -2,10 +2,12 @@ import { useState, useEffect } from 'react'
 import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
 import { useCheatsheets } from './hooks/useCheatsheets'
+import { useTheme } from './hooks/useTheme'
 import './index.css'
 
 function App() {
   const { filteredCheatsheets, searchQuery, setSearchQuery, loading } = useCheatsheets()
+  const { theme, toggleTheme } = useTheme()
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -33,6 +35,8 @@ function App() {
         selectedId={selectedId || (filteredCheatsheets[0]?.id)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
+        theme={theme}
+        toggleTheme={toggleTheme}
       />
       <main>
         {selectedCheatsheet ? (
