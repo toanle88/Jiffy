@@ -250,6 +250,55 @@ main {
   background-color: var(--code-bg) !important;
 }
 
+/* Table Styling */
+.markdown-viewer table {
+  width: 100%;
+  border-collapse: separate;
+  /* Changed for rounded corners */
+  border-spacing: 0;
+  margin: 1.5rem 0;
+  font-size: 0.9rem;
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--card-bg);
+  /* Use card bg for slight contrast */
+}
+
+.markdown-viewer th,
+.markdown-viewer td {
+  padding: 1rem;
+  /* More padding */
+  text-align: left;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.markdown-viewer th {
+  background-color: var(--sidebar-bg);
+  /* Distinct header bg */
+  font-weight: 600;
+  color: var(--text-primary);
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+}
+
+.markdown-viewer tr:last-child td {
+  border-bottom: none;
+  /* Remove bottom border from last row */
+}
+
+.markdown-viewer tr:hover td {
+  background-color: var(--hover-bg);
+  transition: background-color 0.2s ease;
+}
+
+/* Zebra striping that works in both themes */
+.markdown-viewer tr:nth-child(even) td {
+  background-color: rgba(125, 125, 125, 0.03);
+  /* Very subtle alternating color */
+}
+
 /* Animations */
 @keyframes fadeIn {
   from {
