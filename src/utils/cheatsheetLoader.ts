@@ -16,7 +16,7 @@ const parseFrontmatter = (fileContent: string) => {
 
   const yamlContent = match[1];
   const markdownContent = match[2];
-  const data: Record<string, any> = {};
+  const data: Record<string, string | string[]> = {};
 
   yamlContent.split('\n').forEach((line) => {
     const [key, ...valueParts] = line.split(':');
@@ -48,8 +48,8 @@ export const loadCheatsheets = async (): Promise<Cheatsheet[]> => {
       return {
         id: slug,
         slug,
-        title: data.title || slug,
-        tags: data.tags || [],
+        title: (typeof data.title === 'string' ? data.title : slug),
+        tags: (Array.isArray(data.tags) ? data.tags : []),
         content: markdownContent,
       };
     });

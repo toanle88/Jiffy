@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useMemo } from 'react'
 import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
 import { useCheatsheets } from './hooks/useCheatsheets'
@@ -10,13 +10,14 @@ function App() {
   const { theme, toggleTheme } = useTheme()
   const [selectedId, setSelectedId] = useState<string | null>(null)
 
-  useEffect(() => {
-    if (!selectedId && filteredCheatsheets.length > 0) {
-      setSelectedId(filteredCheatsheets[0].id)
+  const effectiveSelectedId = useMemo(() => {
+    if (selectedId && filteredCheatsheets.some(s => s.id === selectedId)) {
+      return selectedId
     }
-  }, [filteredCheatsheets, selectedId])
+    return filteredCheatsheets.length > 0 ? filteredCheatsheets[0].id : null
+  }, [selectedId, filteredCheatsheets])
 
-  const selectedCheatsheet = filteredCheatsheets.find(s => s.id === selectedId) || filteredCheatsheets[0]
+  const selectedCheatsheet = filteredCheatsheets.find(s => s.id === effectiveSelectedId) || filteredCheatsheets[0]
 
   if (loading) {
     return (
@@ -29,10 +30,10 @@ function App() {
 
   return (
     <>
-      <Sidebar 
+      <Sidebar
         cheatsheets={filteredCheatsheets}
         onSelect={setSelectedId}
-        selectedId={selectedId || (filteredCheatsheets[0]?.id)}
+        selectedId={effectiveSelectedId || (filteredCheatsheets[0]?.id)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         theme={theme}
