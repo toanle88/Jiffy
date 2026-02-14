@@ -1,73 +1,111 @@
-# React + TypeScript + Vite
+# ⚡ Jiffy Cheats
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Your personal developer cheatsheet hub — a fast, offline-ready PWA for quick-reference guides on the tools you use every day.
 
-Currently, two official plugins are available:
+## ✨ Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **📚 Markdown Cheatsheets** — Curated quick-reference guides for Docker, Git, PostgreSQL, SQL Server, Python, .NET, Azure, Terraform, and Linux.
+- **🔍 Fuzzy Search** — Instantly find what you need with Fuse.js-powered search across all cheatsheets.
+- **🎨 Syntax Highlighting** — Beautiful code blocks via `react-syntax-highlighter`.
+- **🌗 Dark / Light Theme** — Toggle between themes with one click; your preference is persisted.
+- **📱 PWA Support** — Install on any device and use offline with service-worker caching.
+- **⚡ Lightning Fast** — Built with Vite for instant HMR in development and optimized production builds.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Layer          | Technology                              |
+| -------------- | --------------------------------------- |
+| Framework      | React 19 + TypeScript                   |
+| Build Tool     | Vite 7                                  |
+| Markdown       | react-markdown + remark-gfm             |
+| Search         | Fuse.js                                 |
+| Icons          | Lucide React                            |
+| PWA            | vite-plugin-pwa (Workbox)               |
+| Infrastructure | Azure Static Web Apps (Terraform)       |
+| CI/CD          | GitHub Actions                          |
 
-## Expanding the ESLint configuration
+## 🚀 Getting Started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Prerequisites
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- [Node.js](https://nodejs.org/) v18+
+- npm
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Install & Run
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The app will be available at `http://localhost:5173`.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Build for Production
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run build
+npm run preview   # Preview the production build locally
 ```
+
+## 📁 Project Structure
+
+```
+src/
+├── cheatsheets/        # Markdown files (auto-discovered)
+│   ├── docker.md
+│   ├── git.md
+│   ├── postgres.md
+│   └── ...
+├── components/
+│   ├── Sidebar.tsx     # Navigation + search
+│   ├── MarkdownViewer.tsx
+│   └── ThemeToggle.tsx
+├── hooks/
+│   ├── useCheatsheets.ts  # Loading, parsing, filtering
+│   └── useTheme.ts        # Dark/light mode persistence
+├── utils/
+│   └── cheatsheetLoader.ts
+├── index.css           # Global styles & CSS variables
+├── App.tsx
+└── main.tsx
+infra/                  # Terraform (Azure Static Web Apps)
+.github/workflows/      # CI/CD pipelines
+```
+
+## 📝 Adding a New Cheatsheet
+
+1. Create a new `.md` file in `src/cheatsheets/` with YAML frontmatter:
+
+   ```markdown
+   ---
+   title: My Tool
+   icon: wrench
+   category: DevOps
+   ---
+
+   # My Tool Cheatsheet
+
+   ## Section
+   ```bash
+   my-command --flag
+   ​```
+   ```
+
+2. That's it — the cheatsheet loader auto-discovers new files. No manual registration needed.
+
+## 🏗️ Infrastructure
+
+The app is deployed to **Azure Static Web Apps** using Terraform:
+
+- `infra/main.tf` — Resource Group + Static Web App (Free tier)
+- `infra/providers.tf` — Azure provider configuration
+- `infra/variables.tf` — Configurable parameters
+
+GitHub Actions workflows handle deployment (`deploy.yml`) and infrastructure provisioning (`infrastructure.yml`).
+
+## 📜 License
+
+This project is private.
