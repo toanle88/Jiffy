@@ -1,6 +1,6 @@
 ---
 title: React Cheatsheet
-tags: react, javascript, frontend, hooks, components
+tags: [react, javascript, frontend, hooks, components]
 ---
 
 # React Cheatsheet

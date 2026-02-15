@@ -1,6 +1,6 @@
 ---
 title: Bash Cheatsheet
-tags: bash, shell, linux, scripting, command-line
+tags: [bash, shell, linux, scripting, command-line]
 ---
 
 # Bash Cheatsheet
