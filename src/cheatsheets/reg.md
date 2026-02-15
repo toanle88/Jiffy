@@ -1,6 +1,6 @@
 ---
 title: Regular Expressions Cheatsheet
-tags: regex, regular-expressions, pattern-matching, text-processing
+tags: [regex, regular-expressions, pattern-matching, text-processing]
 ---
 
 # Regular Expressions Cheatsheet
