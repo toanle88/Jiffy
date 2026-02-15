@@ -1,5 +1,5 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { loadCheatsheets, type Cheatsheet } from '../utils/cheatsheetLoader';
+import { describe, it, expect } from 'vitest';
+import { loadCheatsheets } from '../utils/cheatsheetLoader';
 
 describe('cheatsheetLoader', () => {
   describe('loadCheatsheets', () => {

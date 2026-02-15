@@ -29,13 +29,13 @@ Object.defineProperty(window, 'localStorage', {
 });
 
 // Mock IntersectionObserver
-global.IntersectionObserver = vi.fn(() => ({
+globalThis.IntersectionObserver = vi.fn(() => ({
   observe: vi.fn(),
   unobserve: vi.fn(),
   disconnect: vi.fn(),
 })) as any;
 
 // Set up globals
-Object.assign(global, {
+Object.assign(globalThis, {
   expectedToPass: expect,
 });
