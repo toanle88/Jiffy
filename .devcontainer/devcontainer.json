@@ -1,18 +1,17 @@
 {
   "name": "Jiffy Dev Container",
-  "image": "mcr.microsoft.com/devcontainers/typescript-node:20",
+  "image": "mcr.microsoft.com/devcontainers/typescript-node:24",
   "features": {
-    "ghcr.io/devcontainers/features/node:1": {
-      "version": "24"
-    },
+    "ghcr.io/devcontainers/features/common-utils:2": {},
     "ghcr.io/devcontainers/features/terraform:1": {
       "version": "latest"
     },
     "ghcr.io/devcontainers/features/azure-cli:1": {
       "version": "latest"
-    }
+    },
+    "ghcr.io/devcontainers/features/github-cli:1": {}
   },
-  "postCreateCommand": "npm install",
+  "postCreateCommand": "npm ci && curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | sudo bash -s -- -b /usr/local/bin v0.54.0 && sudo curl -sSL https://github.com/aquasecurity/tfsec/releases/download/v1.28.14/tfsec-linux-amd64 -o /usr/local/bin/tfsec && sudo chmod +x /usr/local/bin/tfsec",
   "forwardPorts": [5173],
   "customizations": {
     "vscode": {
@@ -20,6 +19,9 @@
         "dbaeumer.vscode-eslint",
         "esbenp.prettier-vscode",
         "hashicorp.terraform",
+        "GitHub.vscode-github-actions",
+        "redhat.vscode-yaml",
+        "timonwong.shellcheck",
         "ms-vscode.azure-account",
         "ms-azuretools.vscode-azurestaticwebapps"
       ]
