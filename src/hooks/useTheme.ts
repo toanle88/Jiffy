@@ -2,7 +2,12 @@ import { useState, useEffect } from 'react';
 
 type Theme = 'dark' | 'light';
 
-export const useTheme = () => {
+interface UseThemeReturn {
+  theme: Theme;
+  toggleTheme: () => void;
+}
+
+export const useTheme = (): UseThemeReturn => {
   const [theme, setTheme] = useState<Theme>(() => {
     const saved = localStorage.getItem('theme') as Theme;
     if (saved) return saved;

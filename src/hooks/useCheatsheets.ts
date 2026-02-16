@@ -3,7 +3,15 @@ import Fuse from 'fuse.js';
 import { loadCheatsheets } from '../utils/cheatsheetLoader';
 import type { Cheatsheet } from '../utils/cheatsheetLoader';
 
-export const useCheatsheets = () => {
+interface UseCheatsheetsReturn {
+  cheatsheets: Cheatsheet[];
+  filteredCheatsheets: Cheatsheet[];
+  loading: boolean;
+  searchQuery: string;
+  setSearchQuery: (query: string) => void;
+}
+
+export const useCheatsheets = (): UseCheatsheetsReturn => {
   const [cheatsheets, setCheatsheets] = useState<Cheatsheet[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');

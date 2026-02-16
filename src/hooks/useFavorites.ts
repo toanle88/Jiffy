@@ -1,6 +1,12 @@
 import { useState, useEffect } from 'react';
 
-export const useFavorites = () => {
+interface UseFavoritesReturn {
+  favorites: Set<string>;
+  toggleFavorite: (id: string) => void;
+  isFavorite: (id: string) => boolean;
+}
+
+export const useFavorites = (): UseFavoritesReturn => {
   const [favorites, setFavorites] = useState<Set<string>>(() => {
     const saved = localStorage.getItem('jiffy-favorites');
     return saved ? new Set(JSON.parse(saved)) : new Set();

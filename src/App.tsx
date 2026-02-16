@@ -33,9 +33,9 @@ function App() {
 
   if (loading) {
     return (
-      <div className="loading">
-        <div className="spinner"></div>
-        <p>Loading your knowledge...</p>
+      <div className="flex flex-col items-center justify-center h-screen bg-background text-foreground">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mb-4"></div>
+        <p className="text-muted">Loading your knowledge...</p>
       </div>
     )
   }
@@ -43,7 +43,7 @@ function App() {
   return (
     <>
       <button
-        className="mobile-menu-btn"
+        className="flex md:hidden items-center justify-center absolute top-4 left-4 z-50 bg-card border border-border text-foreground p-2 rounded-lg backdrop-blur-md cursor-pointer hover:bg-sidebar-hover transition-colors"
         onClick={() => setIsSidebarOpen(true)}
         aria-label="Open menu"
       >
@@ -52,7 +52,7 @@ function App() {
 
       {isSidebarOpen && (
         <div
-          className="sidebar-overlay"
+          className="fixed inset-0 bg-black/50 z-[90] backdrop-blur-[2px] animate-fadeIn md:hidden"
           onClick={() => setIsSidebarOpen(false)}
           aria-hidden="true"
         />
@@ -73,13 +73,13 @@ function App() {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <main>
+      <main className="flex-1 overflow-y-auto p-8 w-full md:p-8">
         {selectedCheatsheet ? (
-          <div className="content-container">
+          <div className="max-w-[900px] mx-auto bg-glass backdrop-blur-xl border border-glass-border rounded-2xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-fadeIn">
             <MarkdownViewer content={selectedCheatsheet.content} theme={theme} />
           </div>
         ) : (
-          <div className="no-results">
+          <div className="max-w-[900px] mx-auto text-center p-12 text-muted">
             <p>No cheatsheets matched your search.</p>
           </div>
         )}
