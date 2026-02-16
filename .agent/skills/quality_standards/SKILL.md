@@ -1,61 +1,54 @@
 ---
 name: Web Development Quality Standards
-description: Guidelines and best practices for building high-quality Vite + React + TypeScript applications.
+description: Guidelines and best practices for building high-quality Vite + React + TypeScript + Tailwind CSS applications.
 ---
 
 # Web Development Quality Standards
 
-This skill defines the development standards for the **Jiffy** project — a developer cheatsheet & quick-reference app built with Vite, React 19, and TypeScript.
+This skill defines the development standards for high-quality web applications built with **Vite**, **React**, **TypeScript**, and **Tailwind CSS**.
 
 ## 1. Project Structure
-- **Components** (`/src/components`): Functional components using `React.FC<Props>` or plain function pattern. Keep components focused and small (Sidebar, MarkdownViewer, ThemeToggle).
-- **Hooks** (`/src/hooks`): Custom hooks for cross-cutting concerns (`useCheatsheets`, `useTheme`). Isolate data-fetching, filtering, and side effects here.
-- **Utils** (`/src/utils`): Pure utility functions (e.g., `cheatsheetLoader.ts`). Must be side-effect-free to stay testable.
-- **Cheatsheets** (`/src/cheatsheets`): Markdown files with YAML frontmatter. Each file represents one cheatsheet topic (e.g., `docker.md`, `git.md`, `postgres.md`).
-- **Styles** (`/src/styles`, `/src/index.css`): Global styles and CSS variable definitions. Component-level styles use dedicated `.css` files or scoped class names.
-- **Assets** (`/src/assets`, `/public`): Static assets including icons, PWA manifest, and service worker config.
+- **Components** (`/src/components`): Functional components using `React.FC<Props>` or the plain function pattern. Keep components focused, small, and reusable.
+- **Hooks** (`/src/hooks`): Isolate logic, data-fetching, and side effects into custom hooks to keep components clean.
+- **Pages/Views** (`/src/pages` or `/src/views`): Main page components that compose multiple lower-level components.
+- **Utils** (`/src/utils`): Pure, side-effect-free utility functions that are easy to test.
+- **Services** (`/src/services`): Logic for external API calls or complex business logic.
+- **Context/Store** (`/src/context` or `/src/store`): Global state management (React Context, Zustand, etc.).
+- **Styles** (`/src/index.css`): Root Tailwind directives and global CSS variable definitions.
 
 ## 2. TypeScript Best Practices
 - **Strict Mode**: `strict: true` in `tsconfig.json` is mandatory.
-- **Interfaces vs Types**: Use `interface` for component props and public APIs. Use `type` for unions, aliases, and utility types.
-- **No `any`**: Avoid `any` at all costs. Use `unknown`, generics, or explicit narrowing if the type is truly dynamic.
-- **Explicit Return Types**: Prefer explicit return types on exported functions and hooks.
+- **Interfaces vs Types**: Use `interface` for public APIs and component props. Use `type` for unions, aliases, and internal utility types.
+- **No `any`**: Avoid `any`. Use `unknown`, generics, or specific narrowing.
+- **Explicit Return Types**: Prefer explicit return types on exported functions, hooks, and API services.
 
-## 3. Content & Markdown
-- **Frontmatter**: Every cheatsheet `.md` file must include YAML frontmatter with at least `title`, `icon`, and `category` fields.
-- **Formatting**: Use GFM (GitHub Flavored Markdown) — tables, fenced code blocks with language tags, and task lists are encouraged.
-- **Syntax Highlighting**: Code blocks are rendered with `react-syntax-highlighter`. Always specify the language for proper highlighting.
-- **Search Friendliness**: Write concise, keyword-rich headings and descriptions so Fuse.js fuzzy search returns relevant results.
+## 3. Tailwind CSS & Styling
+- **Utility-First**: Leverage Tailwind utility classes for the majority of styling needs.
+- **Configuration**: Use `tailwind.config.js` for theme extensions (colors, spacing, fonts) to ensure consistency.
+- **Custom CSS Variables**: Define theme colors (HSL/RGB) as CSS variables in `index.css` and map them in Tailwind's config for dynamic switching (e.g., light/dark mode).
+- **Organization**: Use `clsx` or `tailwind-merge` for conditional class logic and to avoid class conflicts.
+- **Consistency**: Avoid "magic numbers" in arbitrary values (e.g., `h-[123px]`). Use the design system scale where possible.
 
-## 4. Component & UI Quality
-- **Premium Aesthetics**: Follow modern design principles:
-    - Custom fonts (Inter/Outfit via Google Fonts).
-    - HSL-based color palettes with CSS custom properties.
-    - Glassmorphism, subtle gradients, and smooth transitions.
-    - Micro-animations for hover/focus feedback.
-- **Theming**: Support light and dark modes via CSS variables toggled by `useTheme`. Never hard-code colors.
-- **Responsive Design**: Desktop-first sidebar layout that collapses gracefully on smaller screens.
-- **Vanilla CSS**: Use CSS Variables for theme consistency. Avoid inline styles and CSS-in-JS.
+## 4. UI & UX Quality
+- **Design System**: Follow a consistent design language. Use custom fonts (e.g., via Google Fonts) and a cohesive color palette.
+- **Transitions & Animations**: Use smooth transitions for interactive states (hover, focus) and subtle entrance animations to feel premium.
+- **Theming**: Support system-balanced light and dark modes. Never hard-code colors in components.
+- **Responsiveness**: Implement mobile-first or desktop-first responsive layouts using Tailwind's breakpoint prefixes (`sm:`, `md:`, `lg:`, etc.).
 
 ## 5. Performance
-- **Memoization**: Use `useMemo` for derived data (filtered lists, selected items) and `useCallback` for stable handler references.
-- **Lazy Loading**: Load cheatsheet content efficiently; consider code-splitting for large markdown renderers.
-- **Bundle Size**: Be mindful of dependency weight. Prefer tree-shakeable imports (e.g., individual `lucide-react` icons).
-- **PWA**: The app uses `vite-plugin-pwa`. Ensure the service worker is configured for offline-first caching of cheatsheet content.
+- **Memoization**: Optimize expensive computations with `useMemo` and stable function references with `useCallback`.
+- **Code Splitting**: Use `React.lazy` and `Suspense` for large route-level components.
+- **Asset Optimization**: Optimize images and use modern formats (WebP/SVG). Use tree-shakeable iconography (e.g., `lucide-react`).
+- **Build Sizes**: Monitor bundle sizes and avoid importing large, unused libraries.
 
 ## 6. Accessibility (A11y)
-- **Contrast**: Maintain WCAG AA minimum contrast ratios in both light and dark themes.
-- **ARIA**: Use proper `aria-label` and `role` attributes on interactive elements (sidebar items, search input, theme toggle).
-- **Keyboard Navigation**: Ensure sidebar items and search are fully keyboard-navigable with visible focus states.
-- **Semantic HTML**: Use `<nav>`, `<main>`, `<article>`, `<section>` appropriately.
+- **Semantic HTML**: Use proper HTML5 elements (`<header>`, `<nav>`, `<main>`, `<footer>`, `<section>`).
+- **Contrast**: Ensure text colors meet WCAG AA contrast standards.
+- **Keyboard Interactivity**: All interactive elements must be focusable and operable via keyboard.
+- **ARIA**: Use `aria-label`, `role`, and other ARIA attributes where semantic HTML is insufficient.
 
-## 7. Testing & Validation
-- **Unit Tests**: Test utility functions (e.g., cheatsheet loading, frontmatter parsing) and custom hooks.
-- **Linting**: Maintain consistent `eslint` configuration with `typescript-eslint` and `react-hooks` plugins.
-- **Build Verification**: The project must pass `tsc -b && vite build` without errors before any merge.
-
-## 8. Adding New Cheatsheets
-1. Create a new `.md` file in `/src/cheatsheets/` with proper YAML frontmatter.
-2. The cheatsheet loader auto-discovers files via glob import — no manual registration needed.
-3. Use consistent heading hierarchy (`##` for sections, `###` for subsections).
-4. Include practical, copy-paste-ready code snippets with language-tagged fenced blocks.
+## 7. Testing & Maintenance
+- **Unit Testing**: Focus on testing complex logic in custom hooks and utility functions (e.g., Vitest + React Testing Library).
+- **Code Quality**: Maintain clean code via ESLint and Prettier.
+- **Build Verification**: Ensure `tsc -b && vite build` runs without errors before merging changes.
+- **Documentation**: Comment complex logic and maintain a clear README.
