@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { memo, useState, useEffect } from 'react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -18,6 +18,14 @@ interface CodeProps {
 
 const MarkdownViewer = memo(({ content, theme }: MarkdownViewerProps) => {
   const highlighterStyle = theme === 'dark' ? vscDarkPlus : prism;
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
 
   return (
     <div className="text-[0.95rem] text-foreground tracking-tight leading-relaxed">
@@ -56,19 +64,33 @@ const MarkdownViewer = memo(({ content, theme }: MarkdownViewerProps) => {
           tr: ({ children }) => <tr className="even:bg-white/[0.03] transition-colors duration-200">{children}</tr>,
           code({ inline, className, children, ...props }: CodeProps) {
             const match = /language-(\w+)/.exec(className || '');
-            return !inline && match ? (
-              <div className="my-4 rounded-lg overflow-hidden border border-border bg-code">
-                <SyntaxHighlighter
-                  style={highlighterStyle as Record<string, CSSProperties>}
-                  language={match[1]}
-                  PreTag="div"
-                  customStyle={{ margin: 0, padding: '1.5rem', background: 'transparent' }}
-                  {...props}
-                >
-                  {String(children).replace(/\n$/, '')}
-                </SyntaxHighlighter>
-              </div>
-            ) : (
+            const codeContent = String(children).replace(/\n$/, '');
+
+            if (!inline && match) {
+              if (isMobile) {
+                return (
+                  <pre className="my-4 p-4 rounded-lg overflow-x-auto border border-border bg-code font-mono text-sm text-foreground whitespace-pre">
+                    <code>{codeContent}</code>
+                  </pre>
+                );
+              }
+
+              return (
+                <div className="my-4 rounded-lg overflow-hidden border border-border bg-code">
+                  <SyntaxHighlighter
+                    style={highlighterStyle as Record<string, CSSProperties>}
+                    language={match[1]}
+                    PreTag="div"
+                    customStyle={{ margin: 0, padding: '1.5rem', background: 'transparent' }}
+                    {...props}
+                  >
+                    {codeContent}
+                  </SyntaxHighlighter>
+                </div>
+              );
+            }
+
+            return (
               <code className="bg-code p-1 px-1.5 rounded-md font-mono text-[0.9em] text-primary" {...props}>
                 {children}
               </code>
