@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useTransition } from 'react'
 import { Menu } from 'lucide-react'
 import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
@@ -14,6 +14,7 @@ function App() {
   const [selectedId, setSelectedId] = useState<string | null>(null)
   const [showFavorites, setShowFavorites] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isPending, startTransition] = useTransition()
 
   const filteredCheatsheets = useMemo(() => {
     if (showFavorites) {
@@ -30,6 +31,12 @@ function App() {
   }, [selectedId, filteredCheatsheets])
 
   const selectedCheatsheet = filteredCheatsheets.find(s => s.id === effectiveSelectedId) || filteredCheatsheets[0]
+
+  const handleSelect = (id: string) => {
+    startTransition(() => {
+      setSelectedId(id)
+    })
+  }
 
   if (loading) {
     return (
@@ -60,7 +67,7 @@ function App() {
 
       <Sidebar
         cheatsheets={filteredCheatsheets}
-        onSelect={setSelectedId}
+        onSelect={handleSelect}
         selectedId={effectiveSelectedId || (filteredCheatsheets[0]?.id)}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
@@ -73,7 +80,7 @@ function App() {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <main className="flex-1 overflow-y-auto p-8 w-full md:p-8">
+      <main className={`flex-1 overflow-y-auto p-8 w-full md:p-8 transition-opacity duration-300 ${isPending ? 'opacity-50' : 'opacity-100'}`}>
         {selectedCheatsheet ? (
           <div className="max-w-[900px] mx-auto bg-glass backdrop-blur-xl border border-glass-border rounded-2xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-fadeIn">
             <MarkdownViewer content={selectedCheatsheet.content} theme={theme} />
