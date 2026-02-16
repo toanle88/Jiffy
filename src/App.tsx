@@ -1,4 +1,4 @@
-import { useState, useMemo, useTransition } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Menu } from 'lucide-react'
 import Sidebar from './components/Sidebar'
 import MarkdownViewer from './components/MarkdownViewer'
@@ -11,10 +11,11 @@ function App() {
   const { filteredCheatsheets: searchResults, searchQuery, setSearchQuery, loading } = useCheatsheets()
   const { theme, toggleTheme } = useTheme()
   const { favorites, toggleFavorite } = useFavorites()
-  const [selectedId, setSelectedId] = useState<string | null>(null)
+
+  const [activeId, setActiveId] = useState<string | null>(null)
+  const [renderedId, setRenderedId] = useState<string | null>(null)
   const [showFavorites, setShowFavorites] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-  const [isPending, startTransition] = useTransition()
 
   const filteredCheatsheets = useMemo(() => {
     if (showFavorites) {
@@ -23,19 +24,33 @@ function App() {
     return searchResults
   }, [searchResults, showFavorites, favorites])
 
-  const effectiveSelectedId = useMemo(() => {
-    if (selectedId && filteredCheatsheets.some(s => s.id === selectedId)) {
-      return selectedId
+  const effectiveActiveId = useMemo(() => {
+    if (activeId && filteredCheatsheets.some(s => s.id === activeId)) {
+      return activeId
     }
     return filteredCheatsheets.length > 0 ? filteredCheatsheets[0].id : null
-  }, [selectedId, filteredCheatsheets])
+  }, [activeId, filteredCheatsheets])
 
-  const selectedCheatsheet = filteredCheatsheets.find(s => s.id === effectiveSelectedId) || filteredCheatsheets[0]
+  useEffect(() => {
+    if (effectiveActiveId && !renderedId) {
+      setRenderedId(effectiveActiveId)
+    }
+  }, [effectiveActiveId, renderedId])
+
+  const selectedCheatsheet = filteredCheatsheets.find(s => s.id === renderedId) || filteredCheatsheets[0]
+  const isTransitioning = activeId !== renderedId && renderedId !== null
 
   const handleSelect = (id: string) => {
-    startTransition(() => {
-      setSelectedId(id)
-    })
+    setActiveId(id)
+
+    if (window.innerWidth < 768) {
+      setIsSidebarOpen(false)
+      setTimeout(() => {
+        setRenderedId(id)
+      }, 350)
+    } else {
+      setRenderedId(id)
+    }
   }
 
   if (loading) {
@@ -68,7 +83,7 @@ function App() {
       <Sidebar
         cheatsheets={filteredCheatsheets}
         onSelect={handleSelect}
-        selectedId={effectiveSelectedId || (filteredCheatsheets[0]?.id)}
+        selectedId={effectiveActiveId}
         searchQuery={searchQuery}
         onSearchChange={setSearchQuery}
         theme={theme}
@@ -80,9 +95,9 @@ function App() {
         isOpen={isSidebarOpen}
         onClose={() => setIsSidebarOpen(false)}
       />
-      <main className={`flex-1 overflow-y-auto p-8 w-full md:p-8 transition-opacity duration-300 ${isPending ? 'opacity-50' : 'opacity-100'}`}>
+      <main className="flex-1 overflow-y-auto p-8 w-full md:p-8">
         {selectedCheatsheet ? (
-          <div className="max-w-[900px] mx-auto bg-glass backdrop-blur-xl border border-glass-border rounded-2xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-fadeIn">
+          <div className={`max-w-[900px] mx-auto bg-glass backdrop-blur-xl border border-glass-border rounded-2xl p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)] animate-fadeIn transition-opacity duration-200 ${isTransitioning ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
             <MarkdownViewer content={selectedCheatsheet.content} theme={theme} />
           </div>
         ) : (
