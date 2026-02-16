@@ -100,7 +100,7 @@ const Sidebar = ({
               key={sheet.id}
               role="option"
               aria-selected={selectedId === sheet.id}
-              className={`group p-3 px-4 rounded-lg cursor-pointer transition-all duration-200 mb-2 hover:bg-sidebar-hover ${selectedId === sheet.id ? 'bg-sidebar-active text-white' : 'text-foreground'}`}
+              className={`group p-3 px-4 rounded-lg cursor-pointer transition-all duration-200 mb-2 ${selectedId === sheet.id ? 'bg-sidebar-active text-white' : 'text-foreground hover:bg-sidebar-hover'}`}
               onClick={() => handleSelect(sheet.id)}
               onKeyDown={(e) => handleKeyDown(e, sheet.id)}
               tabIndex={0}
