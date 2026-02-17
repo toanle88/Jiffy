@@ -27,6 +27,14 @@ const MarkdownViewer = memo(({ content, theme }: MarkdownViewerProps) => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
+  if (isMobile) {
+    return (
+      <pre className="whitespace-pre-wrap font-mono text-sm text-foreground bg-code p-4 rounded-lg border border-border overflow-x-auto">
+        {content}
+      </pre>
+    );
+  }
+
   return (
     <div className="text-[0.95rem] text-foreground tracking-tight leading-relaxed">
       <ReactMarkdown
@@ -67,14 +75,6 @@ const MarkdownViewer = memo(({ content, theme }: MarkdownViewerProps) => {
             const codeContent = String(children).replace(/\n$/, '');
 
             if (!inline && match) {
-              if (isMobile) {
-                return (
-                  <pre className="my-4 p-4 rounded-lg overflow-x-auto border border-border bg-code font-mono text-sm text-foreground whitespace-pre">
-                    <code>{codeContent}</code>
-                  </pre>
-                );
-              }
-
               return (
                 <div className="my-4 rounded-lg overflow-hidden border border-border bg-code">
                   <SyntaxHighlighter
