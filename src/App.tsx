@@ -33,6 +33,7 @@ function App() {
 
   useEffect(() => {
     if (effectiveActiveId && !renderedId) {
+      setActiveId(effectiveActiveId)
       setRenderedId(effectiveActiveId)
     }
   }, [effectiveActiveId, renderedId])
